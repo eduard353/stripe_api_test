@@ -1,7 +1,7 @@
 from django.http.response import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
-from .models import Item
+from .models import Item, Order
 import stripe
 from rest_framework.decorators import api_view
 from . import env
@@ -29,7 +29,7 @@ def items_list(request):
 def buy_item(request, pk):
     if request.method == 'GET':
         domain_url = 'http://localhost:8000'
-        price = Item.objects.get(id=pk)
+        item = Item.objects.get(id=pk)
         stripe.api_key = env.api_key
         try:
 
@@ -41,11 +41,39 @@ def buy_item(request, pk):
                 cancel_url=domain_url + '/cancel',
                 line_items=[
                     {
-                        'price': price.stripe_price_id,
+                        'price': item.stripe_price_id,
                         'quantity': 1,
 
                     }
                 ]
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+
+@csrf_exempt
+@api_view(['GET'])
+def buy_order(request, pk):
+    if request.method == 'GET':
+        domain_url = 'http://localhost:8000'
+        items = Item.objects.filter(order__id=pk)
+        line_items = []
+        for item in items:
+            line_items.append(
+                {'price': item.stripe_price_id,
+                'quantity': 1,}
+            )
+        stripe.api_key = env.api_key
+        try:
+
+            checkout_session = stripe.checkout.Session.create(
+
+
+                mode='payment',
+                success_url=domain_url + '/success',
+                cancel_url=domain_url + '/cancel',
+                line_items=line_items
             )
             return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:

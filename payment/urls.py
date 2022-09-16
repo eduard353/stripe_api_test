@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     path('item/<int:pk>', views.get_item, name='get_item'),
     path('buy/<int:pk>', views.buy_item, name='buy_item'),
+    path('buy_order/<int:pk>', views.buy_order, name='buy_order'),
     path('success', views.success_pay, name='success_pay'),
     path('cancel', views.cancel_pay, name='cancel_pay'),
 
