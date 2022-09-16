@@ -20,6 +20,13 @@ def get_item(request, pk):
     return render(request, 'payment/get_item.html', {'item': item})
 
 
+@api_view(['GET'])
+def get_order(request, pk):
+    order = Order.objects.get(pk=pk)
+    items = Item.objects.filter(order__id=pk)
+    return render(request, 'payment/get_order.html', {'order': order, 'items': items})
+
+
 def items_list(request):
     items = Item.objects.all()
     return render(request, 'payment/home.html', {'items': items})
