@@ -16,13 +16,19 @@ def success_pay(request):
 
 @api_view(['GET'])
 def get_item(request, pk):
-    item = Item.objects.get(pk=pk)
+    try:
+        item = Item.objects.get(pk=pk)
+    except Item.DoesNotExist:
+        return render(request, 'payment/404.html')
     return render(request, 'payment/get_item.html', {'item': item})
 
 
 @api_view(['GET'])
 def get_order(request, pk):
-    order = Order.objects.get(pk=pk)
+    try:
+        order = Order.objects.get(pk=pk)
+    except Order.DoesNotExist:
+        return render(request, 'payment/404.html')
     items = Item.objects.filter(order__id=pk)
     return render(request, 'payment/get_order.html', {'order': order, 'items': items})
 
