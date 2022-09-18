@@ -8,5 +8,5 @@ payment/env.py
 payment/migrations
 /.idea
 /venv
-/db
+db/db.sqlite3
 .env
