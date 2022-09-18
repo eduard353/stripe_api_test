@@ -1,43 +1,42 @@
-
 <html>
-  <head>
-      <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+<head>
+    <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
     <title>Buy order # {{order.id}}</title>
-  </head>
-  <body>
-    <h1>Order #{{order.id}}:</h1>
-    {% for item in items %}
-        <p>{{ item.name }}</p>
-        <p>Description:</p>
-        <p>{{item.description}}</p>
-        <p>Price: {{ item.price }}</p>
-        <p>-----------------------------------------</p>
-    {% endfor %}
-    <button id="buy-button">Buy</button>
-    <script type="text/javascript">
-      var stripe = Stripe('pk_test_51LhFHXEmZn1oKUwFk6vqs0HNOpGVPhiWCFyTeVMWihJo2zLvLV9hwkjgNSaVAPRfw15hQWouSRrNpTuexyTvMBaw00U8pbjfke'
-);
-      var buyButton = document.getElementById('buy-button');
-      buyButton.addEventListener('click', function() {
-          // Create a new Checkout Session using the server-side endpoint
-          // Redirect to Stripe Session Checkout
-          fetch('/buy_order/{{order.pk}}', {method: 'GET'})
-              .then(function(response) {
-               // console.log(response.json());
-          return response.json();
-        })
-        .then(function(session) {
-          return stripe.redirectToCheckout({ sessionId: session.sessionId });
-        })
-        .then(function(result) {
-          // If `redirectToCheckout` fails due to a browser or network
-          // error, you should display the localized error message to your
-          // customer using `error.message`.
-          if (result.error) {
-            alert(result.error.message);
-          }
-        });
-      });
-    </script>
-  </body>
+</head>
+<body>
+<h1>Order #{{order.id}}:</h1>
+{% for item in items %}
+<p>{{ item.name }}</p>
+<p>Description:</p>
+<p>{{item.description}}</p>
+<p>Price: {{ item.price }}</p>
+<p>-----------------------------------------</p>
+{% endfor %}
+<button id="buy-button">Buy</button>
+<script type="text/javascript">
+    var stripe = Stripe('pk_test_51LhFHXEmZn1oKUwFk6vqs0HNOpGVPhiWCFyTeVMWihJo2zLvLV9hwkjgNSaVAPRfw15hQWouSRrNpTuexyTvMBaw00U8pbjfke'
+    );
+    var buyButton = document.getElementById('buy-button');
+    buyButton.addEventListener('click', function () {
+        // Create a new Checkout Session using the server-side endpoint
+        // Redirect to Stripe Session Checkout
+        fetch('/buy_order/{{order.pk}}', {method: 'GET'})
+            .then(function (response) {
+                // console.log(response.json());
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({sessionId: session.sessionId});
+            })
+            .then(function (result) {
+                // If `redirectToCheckout` fails due to a browser or network
+                // error, you should display the localized error message to your
+                // customer using `error.message`.
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            });
+    });
+</script>
+</body>
 </html>
