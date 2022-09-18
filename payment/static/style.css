@@ -1,0 +1,39 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 200px; /* Ограничение ширины */
+    margin: auto;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+h3 {
+    color: #7c4dff;
+}
+
+p {
+    padding: 4px;
+    font-size: 14px;
+    color: #757575;
+}
+
+.price {
+    color: #d32f2f;
+    font-size: 18px;
+}
+
+.card button {
+    border: none;
+    outline: 0;
+    padding: 10px;
+    color: #fff;
+    background-color: #f44336;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 18px;
+}
