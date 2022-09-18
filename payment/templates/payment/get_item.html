@@ -1,14 +1,19 @@
+{% load static %}
+
 <html>
 <head>
     <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <title>Buy {{item.name}}</title>
 </head>
 <body>
-<h1>{{item.name}}</h1>
+<div class="card">
+<h3>{{item.name}}</h3>
 <p>Description of {{item.name}}</p>
 <p>{{item.description}}</p>
+<p class="price">{{item.price}}</p>
 <button id="buy-button">Buy</button>
-<button id="buy-button-intent">Buy Intent</button>
+
 <script type="text/javascript">
     var stripe = Stripe('pk_test_51LhFHXEmZn1oKUwFk6vqs0HNOpGVPhiWCFyTeVMWihJo2zLvLV9hwkjgNSaVAPRfw15hQWouSRrNpTuexyTvMBaw00U8pbjfke'
     );
@@ -36,5 +41,6 @@
     });
 
 </script>
+</div>
 </body>
 </html>

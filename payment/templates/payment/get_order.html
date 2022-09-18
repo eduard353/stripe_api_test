@@ -1,16 +1,20 @@
+{% load static %}
+
 <html>
 <head>
     <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <title>Buy order # {{order.id}}</title>
 </head>
 <body>
-<h1>Order #{{order.id}}:</h1>
+<div class="card">
+<h3>Order #{{order.id}}:</h3>
 {% for item in items %}
 <p>{{ item.name }}</p>
-<p>Description:</p>
+
 <p>{{item.description}}</p>
-<p>Price: {{ item.price }}</p>
-<p>-----------------------------------------</p>
+<p class="price">Price: {{ item.price }}</p>
+<p>-------------------------------------</p>
 {% endfor %}
 <button id="buy-button">Buy</button>
 <script type="text/javascript">
@@ -38,5 +42,6 @@
             });
     });
 </script>
+</div>
 </body>
 </html>

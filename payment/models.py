@@ -1,23 +1,9 @@
 from django.db import models
-from . import env
 import stripe
 from django.core.validators import MaxValueValidator, MinValueValidator
+import os
 
-stripe.api_key = env.api_key
-
-
-#
-# class Currency(models.Model):
-#
-#     currency = models.CharField(max_length=3)
-#
-#     def __str__(self):
-#         return self.currency
-#
-#     class Meta:
-#
-#         verbose_name = "Валюта"
-#         verbose_name_plural = "Валюты"
+stripe.api_key = os.getenv("STRIPE_API_KEY")
 
 
 class Item(models.Model):
@@ -27,27 +13,25 @@ class Item(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0), ])
     stripe_price_id = models.CharField(max_length=100, default='', editable=False)
 
-    # currency = models.ForeignKey(Currency, blank=True, null=True, on_delete=models.DO_NOTHING)
-
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
+        # Переопределяем метод для автоматического создание объектов в Stripe
         if self.stripe_item_id == '':
             item = stripe.Product.create(name=self.name, description=self.description)
             price = stripe.Price.create(
                 unit_amount=int(self.price * 100),
-                # currency=self.currency,
+                currency='usd',
                 product=item.id,
-
             )
             self.stripe_item_id = item.id
 
         else:
+            # Если объект уже существует, то изменяем его, а не создаем новый
             stripe.Price.modify(self.stripe_price_id, active=False)
             price = stripe.Price.create(
                 unit_amount=int(self.price * 100),
-                # currency=self.currency,
                 product=self.stripe_item_id,
             )
             stripe.Product.modify(
@@ -59,7 +43,8 @@ class Item(models.Model):
         self.stripe_price_id = price.id
         super().save(*args, **kwargs)
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
+        # При удалении объекта в Stripe делаем его архивным
         try:
             stripe.Product.modify(self.stripe_item_id, active=False)
         except Exception as e:
@@ -84,6 +69,13 @@ class Tax(models.Model):
         return self.display_name
 
     def save(self, *args, **kwargs):
+        # Переопределяем метод для автоматического создание объектов в Stripe
+        # Если мы изменяем Налог, то сатрый варинт делаем архивным и создаем новый
+        if self.stripe_tax_id != '':
+            stripe.TaxRate.modify(
+                self.stripe_tax_id,
+                active=False,
+            )
         tax = stripe.TaxRate.create(display_name=self.display_name,
                                     percentage=self.percentage,
                                     inclusive=self.inclusive, )
@@ -92,7 +84,7 @@ class Tax(models.Model):
 
         super().save(*args, **kwargs)
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
         try:
             stripe.TaxRate.modify(self.stripe_tax_id, active=False)
         except Exception as e:
@@ -115,11 +107,13 @@ class Discount(models.Model):
         return str(self.name)
 
     def save(self, *args, **kwargs):
+        if self.stripe_coupon_id != '':
+            stripe.Coupon.delete(self.stripe_coupon_id)
         coupon = stripe.Coupon.create(percent_off=self.percent, duration="once")
         self.stripe_coupon_id = coupon.id
         super().save(*args, **kwargs)
 
-    def delete(self):
+    def delete(self, *args, **kwargs):
         try:
             stripe.Coupon.delete(self.stripe_coupon_id)
         except Exception as e:

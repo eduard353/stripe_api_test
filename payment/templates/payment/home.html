@@ -1,13 +1,18 @@
+{% load static %}
+
 <html>
 <head>
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
     <title>Items</title>
 </head>
 <body>
 {% for item in items %}
-<p>{{item.name}}</p>
+<div class="card">
+<h3>{{item.name}}</h3>
 <p>Description of {{item.name}}</p>
 <p>{{item.description}}</p>
+<p class="price">{{item.price}}</p>
 <button id="buy-button-{{item.pk}}">Buy</button>
 <script type="text/javascript">
     var stripe = Stripe('pk_test_51LhFHXEmZn1oKUwFk6vqs0HNOpGVPhiWCFyTeVMWihJo2zLvLV9hwkjgNSaVAPRfw15hQWouSRrNpTuexyTvMBaw00U8pbjfke');
@@ -31,6 +36,9 @@
             });
     });
 </script>
+    </div>
+<br>
+<br>
 {% endfor %}
 </body>
 </html>

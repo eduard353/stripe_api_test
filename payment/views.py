@@ -4,8 +4,10 @@ from django.shortcuts import render
 from .models import Item, Order, Discount, Tax
 import stripe
 from rest_framework.decorators import api_view
-from . import env
+import os
 
+
+stripe.api_key = os.getenv("STRIPE_API_KEY")
 
 def cancel_pay(request):
     return render(request, 'payment/cancel.html')
@@ -45,7 +47,7 @@ def buy_item(request, pk):
     if request.method == 'GET':
         domain_url = 'http://localhost:8000'
         item = Item.objects.get(id=pk)
-        stripe.api_key = env.api_key
+
         try:
 
             checkout_session = stripe.checkout.Session.create(
@@ -93,7 +95,7 @@ def buy_order(request, pk):
             line_items.append(
                 data
             )
-        stripe.api_key = env.api_key
+
         try:
 
             checkout_session = stripe.checkout.Session.create(
