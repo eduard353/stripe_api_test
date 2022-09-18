@@ -9,3 +9,4 @@ payment/env.py
 payment/migrations
 /.idea
 /venv
+/db
