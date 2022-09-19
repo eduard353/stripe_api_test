@@ -23,7 +23,7 @@ def get_item(request, pk):
         item = Item.objects.get(pk=pk)
     except Item.DoesNotExist:
         return render(request, 'payment/404.html')
-    return render(request, 'payment/get_item.html', {'item': item})
+    return render(request, 'payment/get_item.html', {'item': item, 'pub_key': {'key':os.getenv('STRIPE_PUB_KEY')}})
 
 
 @api_view(['GET'])
@@ -33,12 +33,12 @@ def get_order(request, pk):
     except Order.DoesNotExist:
         return render(request, 'payment/404.html')
     items = Item.objects.filter(order__id=pk)
-    return render(request, 'payment/get_order.html', {'order': order, 'items': items})
+    return render(request, 'payment/get_order.html', {'order': order, 'items': items, 'pub_key': {'key':os.getenv('STRIPE_PUB_KEY')}})
 
 
 def items_list(request):
     items = Item.objects.all()
-    return render(request, 'payment/home.html', {'items': items})
+    return render(request, 'payment/home.html', {'items': items, 'pub_key': {'key':os.getenv('STRIPE_PUB_KEY')}})
 
 
 @csrf_exempt
