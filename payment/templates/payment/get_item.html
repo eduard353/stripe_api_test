@@ -15,8 +15,7 @@
 <button id="buy-button">Buy</button>
 
 <script type="text/javascript">
-    var stripe = Stripe('pk_test_51LhFHXEmZn1oKUwFk6vqs0HNOpGVPhiWCFyTeVMWihJo2zLvLV9hwkjgNSaVAPRfw15hQWouSRrNpTuexyTvMBaw00U8pbjfke'
-    );
+    var stripe = Stripe("{{pub_key.key}}");
     var buyButton = document.getElementById('buy-button');
     var buyButton2 = document.getElementById('buy-button-intent');
     buyButton.addEventListener('click', function () {
