@@ -33,18 +33,16 @@
     ```
     python manage.py createsuperuser
     ```
-6. Сохранить секретный ключ Django и секретный API ключ Stripe в системных переменных ```SECRET_KEY``` и ```STRIPE_API_KEY```:
+6. Сохранить секретный ключ Django, секретный API ключ и публичный API ключ Stripe в системных переменных ```SECRET_KEY```, ```STRIPE_API_KEY``` и ```STRIPE_PUB_KEY```:
    * [Системные переменные в Linux](https://losst.ru/peremennye-okruzheniya-v-linux?ysclid=l88zicstrj720325483)
    * [Системные переменные в Windows](https://lumpics.ru/environment-variables-in-windows-10/?ysclid=l88zhusv3s701805182)
    
-7. В шаблонах HTML страниц ```home.html```, ```get_tem.html```, ```get_order.html``` установить свой публичный API ключ Stripe.
-   Заменить в строке ```var stripe = Stripe('Your Public Api Key')```
-   
-8. Запускаем проект командой:
+  
+7. Запускаем проект командой:
    ```
    python manage.py runserver
    ```
-9. Доступ к сервису будет доступен по адресу [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+8. Доступ к сервису будет доступен по адресу [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 Реализован Django + Stripe API бэкенд со следующим функционалом:
